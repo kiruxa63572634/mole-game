@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<style type="text/css">
+		.prop {
+			position: absolute;
+			height: 100px;
+			width: 100px;
+			background-image: url(hole.png);
+			background-size: 100% 100%
+
+		}
+		.moleClass{
+			height: 100px;
+			width: 70px;
+			position: absolute;
+			transition: 1s;
+		}
+		.back{
+			background-image: url(back.png);
+			background-size: 100% 100%;
+		}
+	</style>
+</head>
+<body>
+
+<!-- дивы норы чтобы появится -->
+	<h1>score: <span class="span">0</span></h1>
+	<h1>TIME: <span class="timerBox">60</span></h1>
+	<div class="back" style="top: 80px; left: 500px"></div>
+	<div class="back" style="top: 80px; left: 700px"></div>
+	<div class="back" style="top: 80px; left: 900px"></div>
+
+	<div class="back" style="top: 280px; left: 500px"></div>
+	<div class="back" style="top: 280px; left: 700px"></div>
+	<div class="back" style="top: 280px; left: 900px"></div>
+
+	<div class="back" style="top: 480px; left: 500px"></div>
+	<div class="back" style="top: 480px; left: 700px"></div>
+	<div class="back" style="top: 480px; left: 900px"></div>
+
+	<div class="prop nora" style="top: 100px; left: 500px"></div>
+	<div class="prop" style="top: 100px; left: 700px"></div>
+	<div class="prop" style="top: 100px; left: 900px"></div>
+	
+	<div class="prop nora" style="top: 300px; left: 500px"></div>
+	<div class="prop" style="top: 300px; left: 700px"></div>
+	<div class="prop" style="top: 300px; left: 900px"></div>
+	
+	<div class="prop nora" style="top: 500px; left: 500px"></div>
+	<div class="prop" style="top: 500px; left: 700px"></div>
+	<div class="prop" style="top: 500px; left: 900px"></div>
+	
+	
+	
+	
+	<script type="text/javascript">
+		let firstNora = document.querySelector(".nora")
+		let holesX = [510, 710, 910]
+		let holesY = [100,300,500]
+		let type = ["good", "bad"]
+		let score = 0
+		let span = document.querySelector(".span")
+		let timerN = 60
+		let timerBox = document.querySelector(".timerBox")
+	
+		let createMole = function(){
+		let mole = document.createElement("div")
+			document.body.appendChild(mole)
+			firstNora.before(mole)
+			mole.classList.add("moleClass")
+			mole.style.top = "50px"
+			mole.style.left = "500px"
+	
+			let indexX = Math.round(Math.random()*2)
+			mole.style.left = holesX[indexX] + "px"
+			let indexY = Math.round(Math.random()*2)
+			mole.style.top = holesY[indexY] + "px"
+			let indexType = Math.round(Math.random()*1)
+			mole.type = type[indexType]
+	
+			if(mole.type=="good"){
+				//mole.style.background = "green"
+				mole.style.backgroundImage = "url(mole.png)"
+				mole.style.backgroundSize = "100% 100%"
+			}else{
+				//.style.background = "red"
+				mole.style.backgroundImage = "url(bomb.png)"
+				mole.style.backgroundSize = "100% 100%"
+			}
+	
+			let showMole = function(){
+			mole.style.top = holesY[indexY] - 50 + "px"
+			}
+			setTimeout(showMole,1000)
+	
+			let hideMole = function(){
+				mole.style.top = holesY[indexY] + "px"
+			}
+			setTimeout(hideMole, 2000)
+	
+			mole.onclick = function() {
+				if(mole.type=="good"){
+					score = score + 10
+					mole.style.display = "none"
+					span.innerHTML = score
+				}else{
+					score = score - 20
+					mole.style.display = "none"
+					span.innerHTML = score
+				}
+			}
+		}
+		let TimerN = function() {
+			timerN = timerN -1
+			timerBox.innerHTML = timerN
+
+			if(timerN==0){
+				clearInterval(interval2)
+				clearInterval(interval1)
+
+				if (score >= 200) {
+					alert("You win!")
+				}else{
+					alert("You lost!")
+				}
+
+			}
+		}
+
+	interval1 = setInterval(createMole, 1000)
+	interval2 = setInterval(TimerN, 1000)
+
+
+	/*
+		функция рандомайзера() = {}
+		массив из лефтов = [500, 700, 900]
+		массив типов = ["хороший"-приносит очки, "плохой"-убавляет очки]
+
+		функция создания кротов и бомб = {
+			создается див для крота
+			добявляем класс(moleClass) для крота
+			див топ = 100
+			див лефт = рандомный левт из массива лефтов [рандомайзер(2)]
+			див типов = тип[рандомайзер(1)]
+
+			если(тип дива == хороший){
+				цвет дива будет зеленый
+			} или {
+				цвет будет красный 
+			}
+
+			функция поднятия крота/бомбы = {
+				див меняет свой топ на -50пк
+			}
+			таймаут(функция поднятия крота/бомбы, 1сек)
+
+			функция скрывания крота/бомбы = {
+				див меняет свой топ на -50пк
+			}
+			таймаут(функция скрывания крота/бомбы, 2сек)
+
+			нажатие по кроту/бомбе = {
+				проверка на тип{
+					если тип "хороший"{
+						очки + 10
+						спрятать див крота
+					} или{
+						очки - 20
+						спрятать див бомбы
+					}
+				}
+			}
+		}
+
+		установка интервала (функция создания кротов, 1сек)
+	*/
+
+	// дополнительно: 1.добавить еще 2 ряда нор(что бы было 9) 2.добавить таймер 3.добавить картинки
+
+</script>
+</body>
+</html>
